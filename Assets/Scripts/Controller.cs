@@ -3,6 +3,11 @@ using System.Collections;
 
 public class Controller : MonoBehaviour {
     float radius;
+    public float xScale;
+    public float zScale;
+    private float height;
+    private bool playing;
+    private int speedMult;
 
     public float Radius
     {
@@ -11,44 +16,82 @@ public class Controller : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        radius = 1f;
+        radius = .5f;
+        playing = true;
+        speedMult = 1;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 position;
-        if (Input.GetKey(KeyCode.LeftArrow) && transform.position.x >= -12)
+        if(radius >= 12)
         {
-            position = transform.position;
-            position.x-=.1f;
-            transform.position = position;
+            playing = false;
         }
-        if (Input.GetKey(KeyCode.UpArrow) && transform.position.z <= 5.5)
+        if (playing)
         {
+            if (radius >= 5)
+            {
+                speedMult = 2;
+            }
+            if (radius >= 10)
+            {
+                speedMult = 3;
+            }
+            Vector3 position;
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                position = transform.position;
+                position.x -= .1f * speedMult;
+                transform.position = position;
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                position = transform.position;
+                position.z += .1f * speedMult;
+                transform.position = position;
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                position = transform.position;
+                position.z -= .1f * speedMult;
+                transform.position = position;
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                position = transform.position;
+                position.x += .1f * speedMult;
+                transform.position = position;
+            }
             position = transform.position;
-            position.z += .1f;
-            transform.position = position;
-        }
-        if (Input.GetKey(KeyCode.DownArrow) && transform.position.z >= -5.5)
-        {
-            position = transform.position;
-            position.z -= .1f;
-            transform.position = position;
-        }
-        if (Input.GetKey(KeyCode.RightArrow) && transform.position.x <= 12)
-        {
-            position = transform.position;
-            position.x += .1f;
+            position.y = (transform.localScale.y / 2) + height;
             transform.position = position;
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Enemy" && collision.gameObject.GetComponent<Enemy>().radius <= radius)
+        if(playing)
         {
-            Absorb(collision.gameObject.GetComponent<Enemy>());
-            GameObject.Destroy(collision.gameObject);
+            if ((collision.gameObject.tag != "Terrain" || collision.gameObject.tag != "Wall") && collision.gameObject.GetComponent<Enemy>().radius <= radius)
+            {
+                Absorb(collision.gameObject.GetComponent<Enemy>());
+                GameObject.Destroy(collision.gameObject);
+            }
+            else
+            {
+                height += collision.gameObject.transform.localScale.y;
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if(playing)
+        {
+            if (collision.gameObject.tag != "Terrain")
+            {
+                height -= collision.gameObject.transform.localScale.y;
+            }
         }
     }
 
@@ -60,6 +103,6 @@ public class Controller : MonoBehaviour {
         float rTotal = Mathf.Pow((volume * 3.0f) / (4.0f * Mathf.PI), (1.0f / 3.0f));
         float toAdd = rTotal - radius;
         radius += toAdd;
-        transform.localScale = new Vector3(radius, radius, radius);
+        transform.localScale = new Vector3(xScale * radius, 1.0f, zScale * radius);
     }
 }

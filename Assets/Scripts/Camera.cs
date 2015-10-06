@@ -15,6 +15,18 @@ public class Camera : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
-	}
+	void Update ()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        float radius = player.GetComponent < Controller > ().Radius;
+        if(radius >= 5)
+        {
+            up = 20;
+        }
+        if(radius >= 10)
+        {
+            up = 30;
+        }
+        transform.position = new Vector3(toFollow.transform.position.x, toFollow.transform.position.y + up, toFollow.transform.position.z);
+    }
 }
