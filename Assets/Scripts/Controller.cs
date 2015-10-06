@@ -38,25 +38,25 @@ public class Controller : MonoBehaviour {
                 speedMult = 3;
             }
             Vector3 position;
-            if (Input.GetKey(KeyCode.LeftArrow))
+			if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 position = transform.position;
                 position.x -= .1f * speedMult;
                 transform.position = position;
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+			if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 position = transform.position;
                 position.z += .1f * speedMult;
                 transform.position = position;
             }
-            if (Input.GetKey(KeyCode.DownArrow))
+			if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
                 position = transform.position;
                 position.z -= .1f * speedMult;
                 transform.position = position;
             }
-            if (Input.GetKey(KeyCode.RightArrow))
+			if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 position = transform.position;
                 position.x += .1f * speedMult;
