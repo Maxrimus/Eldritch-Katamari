@@ -18,21 +18,6 @@ public class GameController : MonoBehaviour {
         {
             timer -= 10;
             GameObject eP = Instantiate(enemyPrefab);
-            int num = Random.Range(0, 1);
-            float z;
-            if (num == 0)
-            {
-                z = 0.1f;
-            }
-            else if (num == 1)
-            {
-                z = -0.1f;
-            }
-            else
-            {
-                z = 0.1f;
-            }
-            eP.GetComponent<Enemy>()._Move = new Vector3(0, 0, z);
             Vector3 pos = GetComponent<Transform>().position;
             eP.transform.position = pos;
         }

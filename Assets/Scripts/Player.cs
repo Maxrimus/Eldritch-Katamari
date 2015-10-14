@@ -8,6 +8,8 @@ public class Player : MonoBehaviour {
     {
         get { return radius; }
     }
+    float timer;
+    Vector3 move;
 
     bool falling;
     bool jumping;
@@ -15,6 +17,7 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         radius = 1;
+        timer = 0;
         falling = false;
         jumping = false;
     }
@@ -32,6 +35,7 @@ public class Player : MonoBehaviour {
         if (collision.gameObject.tag == "Platform")
         {
             falling = false;
+            jumping = false;
         }
     }
 
@@ -39,7 +43,7 @@ public class Player : MonoBehaviour {
     void Update ()
     {
         GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
-        Vector3 move = new Vector3(0,0,0);
+        move = new Vector3(0,0,0);
         if(Input.GetKey(KeyCode.LeftArrow))
         {
             move = new Vector3(0, 0, -0.1f);
@@ -48,17 +52,27 @@ public class Player : MonoBehaviour {
         {
             move = new Vector3(0, 0, 0.1f);
         }
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            jumping = true;
+            if(!jumping)
+            {
+                jumping = true;
+            }
         }
         if (falling && !jumping)
         {
-            move.y -= 0.1f;
+            move.y = -0.1f;
+            timer = 0;
         }
         if(jumping)
         {
-
+            timer += Time.deltaTime;
+            if(timer >= 0.5f)
+            {
+                jumping = false;
+                timer = 0;
+            }
+            move.y = 0.1f;
         }
         GetComponent<CharacterController>().Move(move);
 	}
