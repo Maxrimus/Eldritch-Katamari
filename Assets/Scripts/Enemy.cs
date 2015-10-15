@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour {
     bool falling;
     bool jumping;
     float timer;
+    public float radius;
+    public GameObject enemyS;
 
 	// Use this for initialization
 	void Start () {
@@ -51,6 +53,17 @@ public class Enemy : MonoBehaviour {
         if (collision.gameObject.tag == "Platform")
         {
             falling = false;
+        }
+    }
+
+    public void breakUp()
+    {
+        Vector3 pos = transform.position;
+        GameObject eP = Instantiate(enemyS);
+        for(int i = 0; i < 16; i++)
+        {
+            eP.transform.position = pos;
+            eP = Instantiate(enemyS);
         }
     }
 
