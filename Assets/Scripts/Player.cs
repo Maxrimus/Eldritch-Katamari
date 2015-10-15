@@ -16,6 +16,11 @@ public class Player : MonoBehaviour {
     {
         get { return level; }
     }
+    private int direction;
+    public int Direction
+    {
+        get { return direction; }
+    }
 
     float timer;
     Vector3 move;
@@ -34,6 +39,7 @@ public class Player : MonoBehaviour {
 	void Start () {
         level = 1;
         radius = 1;
+        direction = 1;
         goal = 2;
         timer = 0;
         falling = false;
@@ -86,6 +92,7 @@ public class Player : MonoBehaviour {
         {
             playing = false;
             youWin.enabled = true;
+            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }
         if(playing)
         {
@@ -94,10 +101,12 @@ public class Player : MonoBehaviour {
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 move = new Vector3(0, 0, -0.1f);
+                direction = 1;
             }
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 move = new Vector3(0, 0, 0.1f);
+                direction = 2;
             }
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
@@ -129,7 +138,6 @@ public class Player : MonoBehaviour {
             }
             GetComponent<CharacterController>().Move(move);
             score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
-
         }
     }
 }

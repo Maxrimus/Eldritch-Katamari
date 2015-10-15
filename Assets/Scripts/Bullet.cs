@@ -7,7 +7,18 @@ public class Bullet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        move = new Vector3(0.0f, 0.0f, 10f);
+        if (GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Direction == 1)
+        {
+            move = new Vector3(0.0f, 0.0f, -10f);
+        }
+        else if (GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().Direction == 2)
+        {
+            move = new Vector3(0.0f, 0.0f, 10f);
+        }
+        else
+        {
+            move = new Vector3(0.0f, 0.0f, 10f);
+        }
 	}
 
     void OnCollisionEnter(Collision collision)
