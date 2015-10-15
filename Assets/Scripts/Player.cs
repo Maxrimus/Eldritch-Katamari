@@ -37,19 +37,6 @@ public class Player : MonoBehaviour {
             falling = false;
             jumping = false;
         }
-        if(collision.gameObject.tag == "Enemy")
-        {
-            if(collision.gameObject.GetComponent<Enemy>().radius <= radius)
-            {
-                float v1 = (4.0f / 3.0f) * Mathf.PI * Mathf.Pow(radius,3);
-                float v2 = (4.0f / 3.0f) * Mathf.PI * Mathf.Pow(collision.gameObject.GetComponent<Enemy>().radius,3);
-                float volTot = v1 + v2;
-                float rb = Mathf.Pow((volTot * 3.0f) / (4.0f * Mathf.PI), (1.0f / 3.0f));
-                float rNew = rb - radius;
-                radius = rNew;
-                GameObject.Destroy(collision.gameObject);
-            }
-        }
     }
 
     // Update is called once per frame
@@ -59,11 +46,11 @@ public class Player : MonoBehaviour {
         move = new Vector3(0,0,0);
         if(Input.GetKey(KeyCode.LeftArrow))
         {
-            move = new Vector3(-0.1f, 0, 0);
+            move = new Vector3(0, 0, -0.1f);
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            move = new Vector3(0.1f, 0, 0);
+            move = new Vector3(0, 0, 0.1f);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
