@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour {
     bool falling;
     bool jumping;
     float timer;
+    public int radius;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +29,7 @@ public class Enemy : MonoBehaviour {
                 z = 0.5f;
                 break;
         }
-        move = new Vector3(0, 0, z);
+        move = new Vector3(z, 0, 0);
         falling = true;
         jumping = false;
         GetComponent<Rigidbody>().freezeRotation = true;
@@ -46,7 +47,7 @@ public class Enemy : MonoBehaviour {
     {
         if(collision.gameObject.tag == "Wall")
         {
-            move.z *= -1;
+            move.x *= -1;
         }
         if (collision.gameObject.tag == "Platform")
         {
