@@ -28,6 +28,9 @@ public class Player : MonoBehaviour {
     bool falling;
     bool jumping;
     bool playing;
+	bool grounded;
+
+	Quaternion rot;
 
     public Text score;
     public Camera cam;
@@ -42,9 +45,11 @@ public class Player : MonoBehaviour {
         direction = 1;
         goal = 2;
         timer = 0;
-        falling = false;
+        falling = true;
         jumping = false;
         playing = true;
+		grounded = true;
+		rot = new Quaternion (0, 0, 0, 1);
         score.text = "Current Size: " + radius + "\n Goal Size: 2";
     }
 
@@ -53,6 +58,7 @@ public class Player : MonoBehaviour {
         if(collision.gameObject.tag == "Platform")
         {
             falling = true;
+			grounded = false;
         }
     }
 
@@ -102,11 +108,13 @@ public class Player : MonoBehaviour {
             {
                 move = new Vector3(0, 0, -0.1f);
                 direction = 1;
+				rot = new Quaternion(0,0,0,1);
             }
             if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 move = new Vector3(0, 0, 0.1f);
-                direction = 2;
+				direction = 2;
+				rot = new Quaternion(0,180,0,1);
             }
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
@@ -132,10 +140,12 @@ public class Player : MonoBehaviour {
                 if (timer >= 0.5f)
                 {
                     jumping = false;
+					falling = true;
                     timer = 0;
                 }
                 move.y = 0.1f;
             }
+			transform.localRotation = rot;
             GetComponent<CharacterController>().Move(move);
             score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }

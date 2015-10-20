@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour {
     {
         Vector3 pos = transform.position;
         GameObject eP = Instantiate(enemyS);
-        for(int i = 0; i < 16; i++)
+        for(int i = 0; i < 2; i++)
         {
             eP.transform.position = pos;
             eP = Instantiate(enemyS);
