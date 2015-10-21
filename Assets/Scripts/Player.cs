@@ -129,6 +129,17 @@ public class Player : MonoBehaviour {
                 Vector3 pos = transform.position;
                 bC.transform.position = pos;
             }
+			// If the R key is pressed
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				// Then reload level
+				Application.LoadLevel(Application.loadedLevel);
+			}
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				// Quit game
+				Application.Quit();
+			}
             if (falling && !jumping)
             {
                 move.y = -0.1f;

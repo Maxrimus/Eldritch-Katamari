@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
-	public bool isStartGame;
+	public bool isStartGame = true;
 
 	// Use this for initialization
 	void Start () {
