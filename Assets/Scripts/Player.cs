@@ -121,8 +121,9 @@ public class Player : MonoBehaviour {
         {
             playing = false;
             youWin.enabled = true;
-            youWin.text = "You Lose!";
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.text = "You Lose!";
+          //  score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(3);
         }
     }
 
@@ -148,7 +149,7 @@ public class Player : MonoBehaviour {
                 Destroy(i);
             }
         }
-        if (radius >= goal && level == 2)
+        if (radius >= 2 && level == 2)
         {
             playing = false;
            // youWin.enabled = true;
@@ -159,8 +160,9 @@ public class Player : MonoBehaviour {
         {
             playing = false;
             youWin.enabled = true;
-            youWin.text = "You Lose!";
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.text = "You Lose!";
+           // score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(3);
         }
         GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
         if (playing)
@@ -206,6 +208,8 @@ public class Player : MonoBehaviour {
 				// Then reload level
 				Application.LoadLevel(Application.loadedLevel);
 			}
+
+
 			if (Input.GetKeyDown(KeyCode.Escape))
 			{
 				// Quit game
