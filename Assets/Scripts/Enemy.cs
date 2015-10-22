@@ -8,51 +8,76 @@ public class Enemy : MonoBehaviour {
     {
         set { move = value; }
     }
+    float damage;
+    public float Damage
+    {
+        get { return damage; }
+    }
+    public Material enraged;
     bool falling;
-    bool jumping;
     float timer;
     public float radius;
     public GameObject enemyS;
+    float z;
 
 	// Use this for initialization
 	void Start () {
-        float z = 0;
+        z = 0;
         int num = (int)Random.Range(0, 2);
         switch(num)
         {
             case 0:
-                z = 0.5f;
+                z = 1.5f;
                 break;
             case 1:
-                z = -0.5f;
+                z = -1.5f;
                 break;
             default:
-                z = 0.5f;
+                z = 1.5f;
                 break;
         }
-        move = new Vector3(0, 0, z);
+        move = new Vector3(0, 0, 0);
         falling = true;
-        jumping = false;
+        damage = .1f;
         GetComponent<Rigidbody>().freezeRotation = true;
 	}
 
-    void OnCollisionExit(Collision collision)
-    {
-        if(collision.gameObject.tag == "Platform")
-        {
-            jumping = true;
-        }
-    }
-
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall")
         {
             move.z *= -1;
+            z *= -1;
         }
         if (collision.gameObject.tag == "Platform")
         {
-            falling = false;
+            Vector3 hit = collision.contacts[0].normal;
+
+            if (Vector3.Dot(hit, Vector3.forward) > 0 || Vector3.Dot(hit, Vector3.forward) < 0)
+            {
+                move.z = 0;
+                falling = true;
+            }
+            else
+            {
+                move.z = z;
+                falling = false;
+            }
+        }
+        if(collision.gameObject.tag == "Pit")
+        {
+            z *= 1.15f;
+            damage *= 1.15f;
+            transform.position = GameObject.FindGameObjectWithTag("GameController").transform.position;
+            GetComponent<Renderer>().material = enraged;
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Platform")
+        {
+            falling = true;
         }
     }
 
@@ -60,11 +85,10 @@ public class Enemy : MonoBehaviour {
     {
         Vector3 pos = transform.position;
         GameObject eP = Instantiate(enemyS);
-        for(int i = 0; i < 2; i++)
-        {
-            eP.transform.position = pos;
-            eP = Instantiate(enemyS);
-        }
+        eP.transform.position = new Vector3(pos.x,pos.y,pos.z + 0.5f);
+        eP = Instantiate(enemyS);
+        eP.transform.position = new Vector3(pos.x, pos.y, pos.z - 0.5f);
+        Destroy(this.gameObject);
     }
 
     // Update is called once per frame
@@ -73,18 +97,7 @@ public class Enemy : MonoBehaviour {
         {
             move.y = -0.8f;
         }
-        if (jumping)
-        {
-            timer += Time.deltaTime;
-            if (timer >= 1f)
-            {
-                jumping = false;
-                falling = true;
-                timer = 0;
-            }
-            move.y = 0.4f;
-        }
-        if(!jumping && !falling)
+        if(!falling)
         {
             move.y = 0.0f;
         }

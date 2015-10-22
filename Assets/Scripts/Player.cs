@@ -49,15 +49,16 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         level = 1;
-        radius = 1;
+        radius = 0.5f;
         direction = 1;
-        goal = 2;
+        goal = 1.0f;
         timer = 0;
         falling = true;
         jumping = false;
         playing = true;
 		grounded = true;
 		rot = new Quaternion (0, 0, 0, 1);
+        youWin.fontSize = 24;
         score.text = "Current Size: " + radius + "\n Goal Size: 2";
     }
 
@@ -66,7 +67,6 @@ public class Player : MonoBehaviour {
         if(collision.gameObject.tag == "Platform")
         {
             falling = true;
-			grounded = false;
         }
     }
 
@@ -74,7 +74,26 @@ public class Player : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Platform")
         {
-            falling = false;
+            Vector3 hit = collision.contacts[0].normal;
+
+            if (Vector3.Dot(hit, Vector3.up) > 0)
+            {
+                falling = false;
+                grounded = true;
+                jumping = false;
+            }
+            else if (Vector3.Dot(hit, Vector3.up) < 0)
+            {
+                falling = true;
+                grounded = false;
+                jumping = false;
+            }
+            else if (Vector3.Dot(hit, Vector3.forward) > 0 || Vector3.Dot(hit, Vector3.forward) < 0 && !grounded)
+            {
+                falling = false;
+                grounded = false;
+                jumping = true;
+            }
         }
         if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "Enemy2")
         {
@@ -88,6 +107,22 @@ public class Player : MonoBehaviour {
                 radius += rNew;
                 GameObject.Destroy(collision.gameObject);
             }
+            else if (collision.gameObject.GetComponent<Enemy>().radius >= radius)
+            {
+                radius -= collision.gameObject.GetComponent<Enemy>().Damage;
+            }
+        }
+        if (collision.gameObject.tag == "Bullet")
+        {
+            Destroy(collision.gameObject);
+            radius += .01f;
+        }
+        if(collision.gameObject.tag == "Pit")
+        {
+            playing = false;
+            youWin.enabled = true;
+            youWin.text = "You Lose!";
+            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }
     }
 
@@ -100,24 +135,36 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        if(radius >= 2 && level == 1)
+        if(radius >= goal && level == 1)
         {
             level = 2;
             spawner.transform.position = new Vector3(0.0f, 7.41f, 30.06f);
             cam.transform.position = new Vector3(9f, 1f, 30.06f);
             transform.position = new Vector3(0.29f,0.98f,30.06f);
-            goal = 5;
+            goal = 3.0f;
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach(GameObject i in enemies)
+            {
+                Destroy(i);
+            }
         }
-        if(radius >= 5)
+        if (radius >= goal && level == 2)
         {
             playing = false;
            // youWin.enabled = true;
             //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
 			Application.LoadLevel(2);
         }
-        if(playing)
+        if(radius <= 0)
         {
-            GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
+            playing = false;
+            youWin.enabled = true;
+            youWin.text = "You Lose!";
+            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+        }
+        GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
+        if (playing)
+        {
             move = new Vector3(0, 0, 0);
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
@@ -133,16 +180,25 @@ public class Player : MonoBehaviour {
             }
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
-                if (!jumping)
+                if (!jumping && grounded)
                 {
                     jumping = true;
+                    grounded = false;
                 }
             }
             if (Input.GetKeyDown(KeyCode.Space) && level >= 2)
             {
                 GameObject bC = Instantiate(bulletP);
                 Vector3 pos = transform.position;
-                bC.transform.position = pos;
+                if(direction == 1)
+                {
+                    bC.transform.position = new Vector3(pos.x, pos.y, pos.z - (5 * radius) / 8);
+                }
+                if (direction == 2)
+                {
+                    bC.transform.position = new Vector3(pos.x, pos.y, pos.z + (5 * radius) / 8);
+                }
+                radius -= .01f;
             }
 			// If the R key is pressed
 			if (Input.GetKeyDown(KeyCode.R))
@@ -160,10 +216,10 @@ public class Player : MonoBehaviour {
                 move.y = -0.1f;
                 timer = 0;
             }
-            if (jumping)
+            if (jumping && !grounded)
             {
                 timer += Time.deltaTime;
-                if (timer >= 0.5f)
+                if (timer >= 0.6f)
                 {
                     jumping = false;
 					falling = true;
@@ -172,6 +228,8 @@ public class Player : MonoBehaviour {
                 move.y = 0.1f;
             }
 			transform.localRotation = rot;
+            float scale = 1.0f * (radius / goal);
+            transform.localScale = new Vector3(0.3f, scale, scale);
             GetComponent<CharacterController>().Move(move);
             score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }
