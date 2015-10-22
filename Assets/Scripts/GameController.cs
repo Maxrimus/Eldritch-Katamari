@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
     public GameObject enemyPrefab1;
     public GameObject enemyPrefab2;
     float timer;
+    float timerMax;
     public Player play;
     public Text instructions;
     public Text youWin;
@@ -14,8 +15,10 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         timer = 0.0f;
+        timerMax = 1.0f;
         instructions.text = "Eat Enemies to Progress!";
         youWin.enabled = false;
+        Physics.IgnoreLayerCollision(8, 8);
 	}
 	
 	// Update is called once per frame
@@ -23,9 +26,9 @@ public class GameController : MonoBehaviour {
         timer += Time.deltaTime;
         Vector3 pos;
         GameObject eP;
-        if(timer >= 3)
+        if(timer >= timerMax)
         {
-            timer -= 3;
+            timer -= timerMax;
             if(play.Level == 1)
             {
                 eP = Instantiate(enemyPrefab1);
@@ -34,6 +37,7 @@ public class GameController : MonoBehaviour {
             }
             else if(play.Level == 2)
             {
+                timerMax = 2.0f;
                 instructions.text = "Press Space!";
                 int num = (int)Random.Range(0, 2);
                 switch(num)
