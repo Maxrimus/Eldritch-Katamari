@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -37,6 +38,13 @@ public class Player : MonoBehaviour {
     public GameObject spawner;
     public GameObject bulletP;
     public Text youWin;
+
+	// Create varaibles for the progressBar;
+	float barInc = 0f;
+	Vector2 pos = new Vector2(20,40);
+	Vector2 size = new Vector2(60,20);
+	Texture2D progressBarEmpty;
+	Texture2D progressBarFull;
 
 	// Use this for initialization
 	void Start () {
@@ -113,10 +121,17 @@ public class Player : MonoBehaviour {
         {
             playing = false;
             youWin.enabled = true;
-            youWin.text = "You Lose!";
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.text = "You Lose!";
+          //  score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(3);
         }
     }
+
+	void OnGUI(){
+		// draw progress bar that raises as the score raises
+		//EditorGUI.ProgressBar(Rect(pos.x, pos.y, size.x, size.y), raduis, "Score");
+
+	}
 
     // Update is called once per frame
     void Update ()
@@ -134,18 +149,20 @@ public class Player : MonoBehaviour {
                 Destroy(i);
             }
         }
-        if (radius >= goal && level == 2)
+        if (radius >= 2 && level == 2)
         {
             playing = false;
-            youWin.enabled = true;
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.enabled = true;
+            //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(2);
         }
         if(radius <= 0)
         {
             playing = false;
             youWin.enabled = true;
-            youWin.text = "You Lose!";
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.text = "You Lose!";
+           // score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(3);
         }
         GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
         if (playing)
@@ -185,6 +202,19 @@ public class Player : MonoBehaviour {
                 }
                 radius -= .01f;
             }
+			// If the R key is pressed
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				// Then reload level
+				Application.LoadLevel(Application.loadedLevel);
+			}
+
+
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				// Quit game
+				Application.Quit();
+			}
             if (falling && !jumping)
             {
                 move.y = -0.1f;
