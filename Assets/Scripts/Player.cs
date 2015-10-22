@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 using System.Collections;
 
 public class Player : MonoBehaviour {
@@ -37,6 +38,13 @@ public class Player : MonoBehaviour {
     public GameObject spawner;
     public GameObject bulletP;
     public Text youWin;
+
+	// Create varaibles for the progressBar;
+	float barInc = 0f;
+	Vector2 pos = new Vector2(20,40);
+	Vector2 size = new Vector2(60,20);
+	Texture2D progressBarEmpty;
+	Texture2D progressBarFull;
 
 	// Use this for initialization
 	void Start () {
@@ -83,6 +91,12 @@ public class Player : MonoBehaviour {
         }
     }
 
+	void OnGUI(){
+		// draw progress bar that raises as the score raises
+		//EditorGUI.ProgressBar(Rect(pos.x, pos.y, size.x, size.y), raduis, "Score");
+
+	}
+
     // Update is called once per frame
     void Update ()
     {
@@ -97,8 +111,9 @@ public class Player : MonoBehaviour {
         if(radius >= 5)
         {
             playing = false;
-            youWin.enabled = true;
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+           // youWin.enabled = true;
+            //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			Application.LoadLevel(2);
         }
         if(playing)
         {
