@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour {
         }
         if(collision.gameObject.tag == "Wall" || collision.gameObject.tag == "Platform")
         {
-            Destroy(this.gameObject);
+            move = Vector3.zero;
         }
     }
 	
