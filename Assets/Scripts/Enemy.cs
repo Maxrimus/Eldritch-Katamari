@@ -38,7 +38,7 @@ public class Enemy : MonoBehaviour {
         }
         move = new Vector3(0, 0, 0);
         falling = true;
-        damage = .1f;
+        damage = .03f;
         GetComponent<Rigidbody>().freezeRotation = true;
 	}
 
