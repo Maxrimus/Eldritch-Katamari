@@ -14,19 +14,23 @@ Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\
 Loading C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\System.Core.dll (this message is harmless)
-- Completed reload, in  0.134 seconds
+- Completed reload, in  0.070 seconds
 desktop: 1366x768 60Hz; virtual: 3286x1080 at -1920,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
 Platform assembly: C:\Users\Joe\Documents\GitHub\Eldritch-Katamari\KP_Test_Data\Managed\System.dll (this message is harmless)
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 1980 -> priority: 1 
-  Thread -> id: 1778 -> priority: 1 
+  Thread -> id: 2ea0 -> priority: 1 
+  Thread -> id: 244 -> priority: 1 
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.412862 ms
+UnloadTime: 0.420326 ms
 
 Unloading 9 unused Assets to reduce memory usage. Loaded Objects now: 381.
-Total: 0.279906 ms (FindLiveObjects: 0.024258 ms CreateObjectMapping: 0.014928 ms MarkObjects: 0.218793 ms  DeleteObjects: 0.011662 ms)
+Total: 0.274775 ms (FindLiveObjects: 0.050383 ms CreateObjectMapping: 0.014461 ms MarkObjects: 0.195001 ms  DeleteObjects: 0.013062 ms)
 
