@@ -13,8 +13,12 @@ public class MenuController : MonoBehaviour {
 		// If the R key is pressed
 		if (Input.GetKeyDown(KeyCode.R))
 		{
-			// Then reload level
-			Application.LoadLevel(1);
+			// Check to make sure you're not in the starting screen
+			if(Application.loadedLevelName != "MainMenu"){
+				// Then reload level
+				Application.LoadLevel(1);
+			}
+			
 		}
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{

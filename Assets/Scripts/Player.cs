@@ -40,9 +40,9 @@ public class Player : MonoBehaviour {
 
 	// Create varaibles for the progressBar;
 	float barInc = 0f;
-	Vector2 pos = new Vector2(20,40);
-	Vector2 size = new Vector2(60,20);
-	Texture2D progressBarEmpty;
+	Vector2 pos = new Vector2(480,40);
+	Vector2 size = new Vector2(260,40);
+	Texture2D barBackground;
 	Texture2D progressBarFull;
 
 	// Use this for initialization
@@ -127,9 +127,18 @@ public class Player : MonoBehaviour {
     }
 
 	void OnGUI(){
-		// draw progress bar that raises as the score raises
-		//EditorGUI.ProgressBar(Rect(pos.x, pos.y, size.x, size.y), raduis, "Score");
-
+		
+		// Draws a background to encase the progress bar
+		GUI.BeginGroup (new Rect (pos.x, pos.y, size.x, size.y));
+		GUI.Box (new Rect(0,0, size.x, size.y),barBackground);
+		
+		// Draws the progress bar
+		GUI.BeginGroup (new Rect (0, 0, size.x * barInc, size.y));
+		GUI.Box (new Rect (0,0, size.x, size.y),progressBarFull);
+		GUI.EndGroup ();
+		
+		GUI.EndGroup ();
+		
 	}
 
     // Update is called once per frame
@@ -234,7 +243,10 @@ public class Player : MonoBehaviour {
             float scale = 1.0f * (radius / goal);
             transform.localScale = new Vector3(0.3f, scale, scale);
             GetComponent<CharacterController>().Move(move);
-            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+			// Increase the bar as the radius increases
+			// Multiply by .33 because the radius is a third of overall goal
+			barInc = radius *0.33f;
+            //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }
     }
 }
