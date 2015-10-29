@@ -35,7 +35,11 @@ public class Bullet : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        Vector3 posP = transform.position;
+        posP.x = 0.3f;
+        transform.position = posP;
         GetComponent<Rigidbody>().velocity = move;
 	}
 }

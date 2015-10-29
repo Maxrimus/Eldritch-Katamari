@@ -12,14 +12,17 @@ public class GameController : MonoBehaviour {
     public Text instructions;
     public Text youWin;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         timer = 0.0f;
         timerMax = 1.0f;
         instructions.text = "Eat Enemies to Progress!";
         youWin.enabled = false;
         Physics.IgnoreLayerCollision(8, 8);
-	}
+        Physics.IgnoreLayerCollision(9, 9);
+        Physics.IgnoreLayerCollision(8, 9);
+        Physics.IgnoreLayerCollision(8, 10);
+    }
 	
 	// Update is called once per frame
 	void Update () {

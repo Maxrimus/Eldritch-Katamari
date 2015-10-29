@@ -81,6 +81,23 @@ public class Enemy : MonoBehaviour {
         }
     }
 
+    void OnTriggerEnter(Collider coll)
+    {
+        print("Hit");
+        if (coll.gameObject.tag == "DeathBlocks1")
+        {
+            print("Blocks1");
+            Vector3 newPos = new Vector3(0f, 7.41f, 0.0f);
+            transform.position = newPos;
+        }
+        if (coll.gameObject.tag == "DeathBlocks2")
+        {
+            print("Blocks2");
+            Vector3 newPos = new Vector3(0f, 7.41f, 30.06f);
+            transform.position = newPos;
+        }
+    }
+
     public void breakUp()
     {
         Vector3 pos = transform.position;
@@ -101,6 +118,9 @@ public class Enemy : MonoBehaviour {
         {
             move.y = 0.0f;
         }
+        Vector3 posP = transform.position;
+        posP.x = 0.3f;
+        transform.position = posP;
         GetComponent<Rigidbody>().velocity = move;
 	}
 }

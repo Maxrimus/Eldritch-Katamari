@@ -14,7 +14,8 @@ public class MainMenu : MonoBehaviour {
 	void OnMouseUp(){
 		// if true then start
 		if (isStartGame) {
-			Application.LoadLevel(1);
+            GameProperties.level = 1;
+			Application.LoadLevel(4);
 		}
 	}
 }

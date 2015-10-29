@@ -30,7 +30,7 @@ public class Player : MonoBehaviour {
     bool playing;
 	bool grounded;
 
-	Quaternion rot;
+    Quaternion rot;
 
     public Text score;
     public Camera cam;
@@ -47,18 +47,42 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        level = 1;
-        radius = 0.5f;
-        direction = 1;
-        goal = 1.0f;
-        timer = 0;
-        falling = true;
-        jumping = false;
-        playing = true;
-		grounded = true;
-		rot = new Quaternion (0, 0, 0, 1);
-        youWin.fontSize = 24;
-        score.text = "Current Size: " + radius + "\n Goal Size: 2";
+        if(GameProperties.level == 2)
+        {
+            level = 2;
+            goal = 2.0f;
+            spawner.transform.position = new Vector3(0.3f, 7.41f, 30.06f);
+            cam.transform.position = new Vector3(9f, 1f, 30.06f);
+            transform.position = new Vector3(0.29f, 0.98f, 30.06f);
+            radius = GameProperties.radius;
+            direction = 1;
+            timer = 0;
+            falling = true;
+            jumping = false;
+            playing = true;
+            grounded = true;
+            rot = new Quaternion(0, 0, 0, 1);
+            youWin.fontSize = 24;
+            score.text = "Current Size: " + radius + "\n Goal Size: 2";
+        }
+        else
+        {
+            level = 1;
+            GameProperties.level = 1;
+            radius = 0.5f;
+            GameProperties.radius = 0.5f;
+            direction = 1;
+            goal = 1.0f;
+            timer = 0;
+            falling = true;
+            jumping = false;
+            playing = true;
+            grounded = true;
+            rot = new Quaternion(0, 0, 0, 1);
+            youWin.fontSize = 24;
+            score.text = "Current Size: " + radius + "\n Goal Size: 2";
+
+        }
     }
 
     void OnCollisionExit(Collision collision)
@@ -103,26 +127,50 @@ public class Player : MonoBehaviour {
                 float volTot = v1 + v2;
                 float rb = Mathf.Pow((volTot * 3.0f) / (4.0f * Mathf.PI), (1.0f / 3.0f));
                 float rNew = rb - radius;
+                Vector3 posC = transform.position;
+                posC.y += rNew;
+                transform.position = posC;
                 radius += rNew;
                 GameObject.Destroy(collision.gameObject);
+                GameProperties.radius = radius;
             }
             else if (collision.gameObject.GetComponent<Enemy>().radius >= radius)
             {
                 radius -= collision.gameObject.GetComponent<Enemy>().Damage;
+                GameProperties.radius = radius;
             }
         }
         if (collision.gameObject.tag == "Bullet")
         {
             Destroy(collision.gameObject);
             radius += .01f;
+            GameProperties.radius = radius;
         }
         if(collision.gameObject.tag == "Pit")
         {
             playing = false;
             youWin.enabled = true;
-           // youWin.text = "You Lose!";
-          //  score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
-			Application.LoadLevel(3);
+            // youWin.text = "You Lose!";
+            //  score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+            GameProperties.level = 1;
+            Application.LoadLevel(3);
+        }
+    }
+
+    void OnTriggerEnter(Collider coll)
+    {
+        print("Hit");
+        if(coll.gameObject.tag == "DeathBlocks1")
+        {
+            print("Blocks1");
+            Vector3 newPos = new Vector3(0.0f, 0.668f, 0.668f);
+            transform.position = newPos;
+        }
+        if (coll.gameObject.tag == "DeathBlocks2")
+        {
+            print("Blocks2");
+            Vector3 newPos = new Vector3(0.0f, 0.98f, 30.06f);
+            transform.position = newPos;
         }
     }
 
@@ -141,36 +189,33 @@ public class Player : MonoBehaviour {
 		
 	}
 
+    void keepPosition(Vector3 posP, float decrease)
+    {
+        Vector3 fixedPos = new Vector3(posP.x,posP.y + decrease,posP.z);
+        transform.position = posP;
+    }
+
     // Update is called once per frame
     void Update ()
     {
-        if(radius >= goal && level == 1)
+        if (radius >= goal && level == 1)
         {
-            level = 2;
-            spawner.transform.position = new Vector3(0.0f, 7.41f, 30.06f);
-            cam.transform.position = new Vector3(9f, 1f, 30.06f);
-            transform.position = new Vector3(0.29f,0.98f,30.06f);
-            goal = 3.0f;
-            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach(GameObject i in enemies)
-            {
-                Destroy(i);
-            }
+            GameProperties.level = 2;
+            GameProperties.radius = radius;
+            Application.LoadLevel(4);
         }
-        if (radius >= 2 && level == 2)
+        else if (radius >= 2.0f && level == 2)
         {
             playing = false;
-           // youWin.enabled = true;
-            //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+            GameProperties.level = 1;
 			Application.LoadLevel(2);
         }
         if(radius <= 0)
         {
             playing = false;
             youWin.enabled = true;
-           // youWin.text = "You Lose!";
-           // score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
-			Application.LoadLevel(3);
+            GameProperties.level = 1;
+            Application.LoadLevel(3);
         }
         GetComponent<Transform>().localRotation = new Quaternion(0, 0, 0, 1);
         if (playing)
@@ -209,6 +254,8 @@ public class Player : MonoBehaviour {
                     bC.transform.position = new Vector3(pos.x, pos.y, pos.z + (5 * radius) / 8);
                 }
                 radius -= .01f;
+                GameProperties.radius = radius;
+                keepPosition(pos, .01f);
             }
 			// If the R key is pressed
 			if (Input.GetKeyDown(KeyCode.R))
@@ -239,14 +286,18 @@ public class Player : MonoBehaviour {
                 }
                 move.y = 0.1f;
             }
-			transform.localRotation = rot;
+            Vector3 posC = transform.position;
+            transform.localRotation = rot;
             float scale = 1.0f * (radius / goal);
             transform.localScale = new Vector3(0.3f, scale, scale);
+            Vector3 posP = transform.position;
+            posP.x = 0.3f;
+            transform.position = posP;
             GetComponent<CharacterController>().Move(move);
 			// Increase the bar as the radius increases
 			// Multiply by .33 because the radius is a third of overall goal
 			barInc = radius *0.33f;
-            //score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
+            score.text = "Current Size: " + radius + "\n Goal Size: " + goal;
         }
     }
 }
